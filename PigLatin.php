@@ -1,16 +1,28 @@
 <?php
-
+/**
+ * A class that helps convert an array of words into piglatin
+ * @author fdc-juno
+ * @param Array $words
+ * @return String $converted_word
+ */
 class PigLatin {
-    private $word = '';
+    private $words = [];
     private $suffix = 'way';
-    function __construct($word) {
-        $this->word = $word;
+
+    //instantiate words to prevent null entities
+    function __construct($words) {
+        $this->words = explode(" ", $words);
     }
 
+    //piglatin converter
     public function convert() {
-        $is_the_first_letter_a_vowel = preg_match('/^[aeiou]/i', $this->word[0]);
-        $converted_word = (!$is_the_first_letter_a_vowel ? substr($this->word, 1) : $this->word) . ($is_the_first_letter_a_vowel ? '' : $this->word[0]) . (!$is_the_first_letter_a_vowel ? substr($this->suffix, 1) : $this->suffix);
-        return $converted_word;
+        $converted_word = [];
+        foreach ($this->words as $word) {
+            //checks if the first letter is a vowel or not
+            $pos = strcspn(strtolower($word), "aeiou"); 
+            $converted_word[] = substr($word, $pos) . ($pos == 0 ? '' : substr($word, 0, $pos)) . ($pos > 0 ? substr($this->suffix, 1) : $this->suffix);
+        }
+        return join(" ", $converted_word);
     }
 }
 ?>
